@@ -12,9 +12,9 @@ const AppView = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>My App</Text>
-      <Text>This is the main view!</Text>
+      <Text>Welcom to My App!</Text>
       <TouchableOpacity onPress={handleGoToSecondView} style={styles.button}>
-        <Text style={styles.buttonText}>Go to Second View</Text>
+        <Text style={styles.buttonText}>Add Item</Text>
       </TouchableOpacity>
     </View>
   );
