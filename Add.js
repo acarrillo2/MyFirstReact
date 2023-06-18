@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Autocomplete from 'react-native-autocomplete-input';
+import sharedStyles from './styles';
 
-const SecondView = () => {
+const Add = () => {
   const navigation = useNavigation();
 
   const handleBack = () => {
@@ -18,7 +19,7 @@ const SecondView = () => {
     // TODO: implement an API call that will fetch suggestions
     const predefinedSuggestions = [
       'Coupe & Flute', 'Coup Style Chicken', 'Coup d\'état', 'Coup the loop',
-      'Canlis', 'Canon', 'Checkmat Jiu Jitsu' 
+      'Canlis', 'Canon', 'Renzo Gracie Seattle', 'Romper (clothing)', 'React (programming languge)' 
     ];
     const filteredSuggestions = predefinedSuggestions.filter((item) =>
       item.toLowerCase().startsWith(text.toLowerCase())
@@ -30,14 +31,15 @@ const SecondView = () => {
     console.log(text)
     setInputText(text);
     setSuggestions([]);
+    navigation.navigate('AddDetails', { selectedText: text });
   };
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-        <Text style={styles.backButtonText}>&#x2190;</Text>
+    <View style={sharedStyles.container}>
+      <TouchableOpacity onPress={handleBack} style={sharedStyles.backButton}>
+        <Text style={sharedStyles.backButtonText}>&#x2190;</Text>
       </TouchableOpacity>
-      <Text>Add Item</Text>
+      <Text style={sharedStyles.subheaderText}>Add Item</Text>
       <Autocomplete
         inputContainerStyle={styles.textInput}
         value={inputText}
@@ -58,21 +60,6 @@ const SecondView = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backButton: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-  },
-  backButtonText: {
-    fontSize: 44,
-    color: '#2196F3',
-  },
   textInput: {
     width: '100%',
     height: 40,
@@ -93,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SecondView;
+export default Add;

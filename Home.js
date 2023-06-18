@@ -1,19 +1,20 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import sharedStyles from './styles';
 
-const AppView = () => {
+const Home = () => {
   const navigation = useNavigation();
 
-  const handleGoToSecondView = () => {
-    navigation.navigate('SecondView');
+  const handleGoToAddView = () => {
+    navigation.navigate('Add');
   };
 
   return (
-    <View style={styles.container}>
+    <View style={sharedStyles.container}>
       <Text style={styles.headerText}>My App</Text>
-      <Text>Welcom to My App!</Text>
-      <TouchableOpacity onPress={handleGoToSecondView} style={styles.button}>
+      <Text>Welcome to My App!</Text>
+      <TouchableOpacity onPress={handleGoToAddView} style={styles.button}>
         <Text style={styles.buttonText}>Add Item</Text>
       </TouchableOpacity>
     </View>
@@ -21,12 +22,6 @@ const AppView = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   button: {
     backgroundColor: '#2196F3',
     padding: 10,
@@ -47,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AppView;
+export default Home;
