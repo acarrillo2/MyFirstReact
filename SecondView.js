@@ -27,6 +27,7 @@ const SecondView = () => {
   };
 
   const handleSelectSuggestion = (text) => {
+    console.log(text)
     setInputText(text);
     setSuggestions([]);
   };
@@ -43,11 +44,13 @@ const SecondView = () => {
         onChangeText={handleInputChange}
         placeholder="Enter some text..."
         data={suggestions}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleSelectSuggestion(item)}>
-            <Text style={styles.suggestionItem}>{item}</Text>
-          </TouchableOpacity>
-        )}
+        flatListProps={{
+          renderItem: ({ item }) => (
+              <TouchableOpacity onPress={() => handleSelectSuggestion(item)}>
+                  <Text>{item}</Text>
+              </TouchableOpacity>
+          ),
+        }}
         containerStyle={styles.suggestionContainer}
       />
     </View>
