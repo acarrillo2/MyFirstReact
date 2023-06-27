@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import sharedStyles from './styles';
 
@@ -7,6 +7,8 @@ const AddDetails = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { selectedText } = route.params;
+    const [dateVisited, setDateVisited] = useState(new Date().toISOString().slice(0, 10));
+    const [selectionConfirmed, setSelectionConfirmed] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -29,35 +31,78 @@ const AddDetails = () => {
     "Coupe & Flute": coupeAndFluteJson,
     "Renzo Gracie Seattle":  renzoGracieSeattleJson
   }
+  // Define the mapping of category and subcategory combinations to properties
+  const propertyMap = {
+    Bars: {
+      'Champagne Bars': ['Date Visited', 'People you visited with', 'Champagne you tried', 'Address', 'Website'],
+      // Add more subcategories and their corresponding properties here
+    },
+    'Martial Arts Studio': {
+      'Brazilian Jiu Jitsu': ['Date Visited', 'Training Partners', 'Head Coach', 'Address', 'Website'],
+      // Add more subcategories and their corresponding properties here
+    },
+    // Add more categories and their corresponding subcategories and properties here
+  };
 
   // TODO have this function prompt user for more inputs for properties to add
   const handleYesSelection = () => {
     console.log("Yes selected");
+    setSelectionConfirmed(true);
   };
   // TODO have this function prompt user with three alternate suggestions  
   const handleNoSelection = () => {
     console.log("No selected");
   };
 
+  const handleSave = () => {
+    // TODO have this print out JSON to be sent to server
+    console.log('Save pressed');
+  };
+  
   const RenderSelection = () => {
     const data = itemMap[selectedText];
-    return (
+    const todayDate = new Date().toISOString().slice(0, 10)
+    if (selectionConfirmed) {
+      const category = data.category;
+      const subcategory = data.subcategory;
+      // Retrieve the properties based on the category and subcategory combination
+      const properties = propertyMap[category]?.[subcategory] || [];
+      return (
         <View style={styles.selectionContainer}>
-            <Text style={styles.selectionPrompt}>Did you mean?</Text>
-            <Text>{data.name}</Text>
-            <Text>{data.subcategory}</Text>
-            <Text>{data.location}</Text>
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={handleYesSelection} style={styles.buttonYes}>
-                    <Text style={styles.buttonText}>Yes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleNoSelection} style={styles.buttonNo}>
-                    <Text style={styles.buttonText}>No</Text>
-                </TouchableOpacity>
+          <Text style={styles.selectionPrompt}>Properties</Text>
+          {properties.map((property, index) => (
+            <View key={index}>
+              <Text>{property}:</Text>
+              <TextInput
+                style={styles.input}
+                value={property === 'Date Visited' ? todayDate : ''}
+              />
             </View>
+          ))}
+          <TouchableOpacity onPress={handleSave} style={styles.buttonSave}>
+            <Text style={styles.buttonText}>Save</Text>
+          </TouchableOpacity>
         </View>
       );
-  }
+    }
+  
+    return (
+      <View style={styles.selectionContainer}>
+        <Text style={styles.selectionPrompt}>Did you mean?</Text>
+        <Text>{data.name}</Text>
+        <Text>{data.subcategory}</Text>
+        <Text>{data.location}</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={handleYesSelection} style={styles.buttonYes}>
+            <Text style={styles.buttonText}>Yes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleNoSelection} style={styles.buttonNo}>
+            <Text style={styles.buttonText}>No</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };  
 
   return (
     <View style={sharedStyles.container}>
@@ -111,6 +156,21 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         textAlign: 'center',
+      },
+      input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
+        marginBottom: 10,
+        paddingHorizontal: 10,
+      },
+    
+      buttonSave: {
+        backgroundColor: 'blue',
+        padding: 10,
+        borderRadius: 5,
+        marginTop: 10,
       },
   });
 
