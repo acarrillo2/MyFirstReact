@@ -7,8 +7,8 @@ const AddDetails = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { selectedText } = route.params;
-    const [dateVisited, setDateVisited] = useState(new Date().toISOString().slice(0, 10));
     const [selectionConfirmed, setSelectionConfirmed] = useState(false);
+    const [showApologies, setShowApologies] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -31,7 +31,7 @@ const AddDetails = () => {
     "Coupe & Flute": coupeAndFluteJson,
     "Renzo Gracie Seattle":  renzoGracieSeattleJson
   }
-  // Define the mapping of category and subcategory combinations to properties
+  // Creating map for now, this will be returned from DB
   const propertyMap = {
     Bars: {
       'Champagne Bars': ['Date Visited', 'People you visited with', 'Champagne you tried', 'Address', 'Website'],
@@ -49,19 +49,32 @@ const AddDetails = () => {
     console.log("Yes selected");
     setSelectionConfirmed(true);
   };
-  // TODO have this function prompt user with three alternate suggestions  
+
   const handleNoSelection = () => {
     console.log("No selected");
+    setShowApologies(true);
+    setTimeout(function() {
+        handleBack();
+      }, 5000);
   };
 
   const handleSave = () => {
     // TODO have this print out JSON to be sent to server
     console.log('Save pressed');
   };
+
+  const setValue = (property, data) => {
+    if (property === 'Date Visited') {
+        return new Date().toISOString().slice(0, 10);
+    } else if (property === 'Address') {
+        return data.location;
+    } else {
+        return undefined;
+    }
+  }
   
   const RenderSelection = () => {
     const data = itemMap[selectedText];
-    const todayDate = new Date().toISOString().slice(0, 10)
     if (selectionConfirmed) {
       const category = data.category;
       const subcategory = data.subcategory;
@@ -75,7 +88,7 @@ const AddDetails = () => {
               <Text>{property}:</Text>
               <TextInput
                 style={styles.input}
-                value={property === 'Date Visited' ? todayDate : ''}
+                defaultValue={setValue(property, data)}
               />
             </View>
           ))}
@@ -100,6 +113,9 @@ const AddDetails = () => {
             <Text style={styles.buttonText}>No</Text>
           </TouchableOpacity>
         </View>
+        {showApologies && (
+            <Text style={styles.apologiesText}>Apologies, navigating back to search</Text>
+        )}
       </View>
     );
   };  
@@ -171,6 +187,13 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         marginTop: 10,
+      },
+
+      apologiesText: {
+        fontWeight: 'bold',
+        padding: 5,
+        marginTop: 10,
+        color: 'red',
       },
   });
 
