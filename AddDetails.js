@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import sharedStyles from './styles';
 
@@ -9,6 +9,8 @@ const AddDetails = () => {
     const { selectedText } = route.params;
     const [selectionConfirmed, setSelectionConfirmed] = useState(false);
     const [showApologies, setShowApologies] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const formData = {};
 
   const handleBack = () => {
     navigation.goBack();
@@ -44,6 +46,13 @@ const AddDetails = () => {
     // Add more categories and their corresponding subcategories and properties here
   };
 
+  const showSuccessAndRedirect = () => {
+    setShowSuccessModal(true);
+    setTimeout(() => {
+      navigation.navigate('Home');
+    }, 3000);
+  };
+
   // TODO have this function prompt user for more inputs for properties to add
   const handleYesSelection = () => {
     console.log("Yes selected");
@@ -59,18 +68,26 @@ const AddDetails = () => {
   };
 
   const handleSave = () => {
-    // TODO have this print out JSON to be sent to server
     console.log('Save pressed');
+    console.log(JSON.stringify(formData, null, 2));
+    showSuccessAndRedirect();
   };
 
   const setValue = (property, data) => {
     if (property === 'Date Visited') {
-        return new Date().toISOString().slice(0, 10);
+        const todayDate = new Date().toISOString().slice(0, 10);
+        formData[property] = todayDate;
+        return todayDate
     } else if (property === 'Address') {
+        formData[property] = data.location;
         return data.location;
     } else {
         return undefined;
     }
+  }
+
+  const updateFormData = (property, value) => {
+    formData[property] = value;
   }
   
   const RenderSelection = () => {
@@ -82,6 +99,15 @@ const AddDetails = () => {
       const properties = propertyMap[category]?.[subcategory] || [];
       return (
         <View style={styles.selectionContainer}>
+            {showSuccessModal && (
+            <Modal transparent={true} animationType="fade">
+                <View style={styles.modalContainer}>
+                <View style={styles.successBox}>
+                    <Text style={styles.successText}>&#x2705; Success!</Text>
+                </View>
+                </View>
+            </Modal>
+            )}
           <Text style={styles.selectionPrompt}>Properties</Text>
           {properties.map((property, index) => (
             <View key={index}>
@@ -89,6 +115,7 @@ const AddDetails = () => {
               <TextInput
                 style={styles.input}
                 defaultValue={setValue(property, data)}
+                onChangeText={(text) => updateFormData(property, text)}
               />
             </View>
           ))}
@@ -194,6 +221,23 @@ const styles = StyleSheet.create({
         padding: 5,
         marginTop: 10,
         color: 'red',
+      },
+
+      modalContainer: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      successBox: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+      },
+      successText: {
+        fontSize: 20,
+        fontWeight: 'bold',
       },
   });
 
