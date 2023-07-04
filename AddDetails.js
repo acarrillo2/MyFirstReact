@@ -8,7 +8,7 @@ const AddDetails = () => {
     const route = useRoute();
     const { selectedText } = route.params;
     const [selectionConfirmed, setSelectionConfirmed] = useState(false);
-    const [showApologies, setShowApologies] = useState(false);
+    const [showApologiesModal, setShowApologiesModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const formData = {};
 
@@ -50,10 +50,9 @@ const AddDetails = () => {
     setShowSuccessModal(true);
     setTimeout(() => {
       navigation.navigate('Home');
-    }, 3000);
+    }, 2000);
   };
 
-  // TODO have this function prompt user for more inputs for properties to add
   const handleYesSelection = () => {
     console.log("Yes selected");
     setSelectionConfirmed(true);
@@ -61,10 +60,10 @@ const AddDetails = () => {
 
   const handleNoSelection = () => {
     console.log("No selected");
-    setShowApologies(true);
+    setShowApologiesModal(true);
     setTimeout(function() {
         handleBack();
-      }, 5000);
+      }, 2000);
   };
 
   const handleSave = () => {
@@ -102,7 +101,7 @@ const AddDetails = () => {
             {showSuccessModal && (
             <Modal transparent={true} animationType="fade">
                 <View style={styles.modalContainer}>
-                <View style={styles.successBox}>
+                <View style={styles.modalBox}>
                     <Text style={styles.successText}>&#x2705; Success!</Text>
                 </View>
                 </View>
@@ -140,8 +139,14 @@ const AddDetails = () => {
             <Text style={styles.buttonText}>No</Text>
           </TouchableOpacity>
         </View>
-        {showApologies && (
-            <Text style={styles.apologiesText}>Apologies, navigating back to search</Text>
+        {showApologiesModal && (
+            <Modal transparent={true} animationType="fade">
+                <View style={styles.modalContainer}>
+                <View style={styles.modalBox}>
+                    <Text style={styles.apologiesText}>Apologies, navigating back to search</Text>
+                </View>
+                </View>
+            </Modal>
         )}
       </View>
     );
@@ -229,7 +234,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
       },
-      successBox: {
+      modalBox: {
         backgroundColor: '#fff',
         padding: 20,
         borderRadius: 10,
