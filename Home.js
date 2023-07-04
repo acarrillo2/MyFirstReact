@@ -10,10 +10,39 @@ const Home = () => {
     navigation.navigate('Add');
   };
 
+  const handleGoToPlanView = () => {
+    navigation.navigate('Plans');
+  };
+
+  const handleGoToListView = () => {
+    navigation.navigate('Lists');
+  };
+
+  const handleGoToItemView = () => {
+    navigation.navigate('Items');
+  };
+
   return (
     <View style={sharedStyles.container}>
       <Text style={styles.headerText}>My App</Text>
-      <Text>Welcome to My App!</Text>
+      <View>
+        <View style={styles.summaryStatRow}>
+          <Text style={styles.summaryStatHeader}>Total Plans</Text>
+          <Text style={styles.summaryStatHeader}>Total Lists</Text>
+          <Text style={styles.summaryStatHeader}>Total Items</Text>
+        </View>
+        <View style={styles.summaryStatRow}>
+          <TouchableOpacity onPress={handleGoToPlanView}>
+            <Text style={styles.summaryStatValue}>10</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleGoToListView}>
+            <Text style={styles.summaryStatValue}>100</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleGoToItemView}>
+            <Text style={styles.summaryStatValue}>100</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       <TouchableOpacity onPress={handleGoToAddView} style={styles.button}>
         <Text style={styles.buttonText}>Add Item</Text>
       </TouchableOpacity>
@@ -39,6 +68,18 @@ const styles = StyleSheet.create({
     top: 20,
     left: 20,
     fontWeight: 'bold',
+  },
+  summaryStatRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  summaryStatHeader: {
+    fontWeight: 'bold',
+    width: 100,
+  },
+  summaryStatValue: {
+    fontSize: 40,
+    width: 100,
   },
 });
 
